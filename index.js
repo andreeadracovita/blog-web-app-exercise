@@ -37,12 +37,11 @@ const blogCategories = [
 ];
 
 class BlogPost {
-	constructor(title, category, author, shortDescription, text) {
+	constructor(title, category, author, text) {
 		this.title = title;
 		this.category = category;
 		this.author = author;
 		this.date = new Date();
-		this.shortDescription = shortDescription;
 		this.text = text;
 	}
 
@@ -57,46 +56,43 @@ const blogPosts = [
 		"Running technique",
 		0,
 		"Ginny",
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		"<p>Lorem ipsum dolor sit amet, consectetur <strong>adipiscing</strong> elit. Donec urna turpis, condimentum nec dictum et, <em>tempus</em> eget odio.</p><hr><p>Curabitur luctus ut neque vitae mollis. Donec eget <em>tellus</em> eu velit faucibus suscipit eget sit amet odio. Fusce elementum lacus sit amet magna vestibulum, ut <strong>convallis</strong> leo eleifend.</p><p>Nulla tortor dolor, fringilla eget ullamcorper eget, hendrerit in metus. Pellentesque pellentesque ex sapien, eu ornare risus gravida sit amet.</p><p>Pellentesque sodales arcu eros, a <strong>bibendum</strong> lectus dictum vel. Maecenas aliquet dolor dapibus, commodo lorem vel, tincidunt erat. Nullam vehicula magna in leo commodo venenatis. Suspendisse potenti.</p>"
 	),
 	new BlogPost(
 		"Cholesterol: the good, the bad and the ugly",
 		1,
 		"Abby",
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		"<p>Lorem ipsum dolor sit amet, consectetur <strong>adipiscing</strong> elit. Donec urna turpis, condimentum nec dictum et, <em>tempus</em> eget odio.</p><p>Curabitur luctus ut neque vitae mollis. Donec eget <em>tellus</em> eu velit faucibus suscipit eget sit amet odio. Fusce elementum lacus sit amet magna vestibulum, ut <strong>convallis</strong> leo eleifend.</p><p>Nulla tortor dolor, fringilla eget ullamcorper eget, hendrerit in metus. Pellentesque pellentesque ex sapien, eu ornare risus gravida sit amet.</p><p>Pellentesque sodales arcu eros, a <strong>bibendum</strong> lectus dictum vel. Maecenas aliquet dolor dapibus, commodo lorem vel, tincidunt erat. Nullam vehicula magna in leo commodo venenatis. Suspendisse potenti.</p>"
 	),
 	new BlogPost(
 		"Switzerland: the Alpine trail, marmots and fondue",
 		4,
 		"Lana",
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		"<p>Lorem ipsum dolor sit amet, consectetur <strong>adipiscing</strong> elit. Donec urna turpis, condimentum nec dictum et, <em>tempus</em> eget odio.</p><p>Curabitur luctus ut neque vitae mollis. Donec eget <em>tellus</em> eu velit faucibus suscipit eget sit amet odio. Fusce elementum lacus sit amet magna vestibulum, ut <strong>convallis</strong> leo eleifend.</p><p>Nulla tortor dolor, fringilla eget ullamcorper eget, hendrerit in metus. Pellentesque pellentesque ex sapien, eu ornare risus gravida sit amet.</p><hr><p>Pellentesque sodales arcu eros, a <strong>bibendum</strong> lectus dictum vel. Maecenas aliquet dolor dapibus, commodo lorem vel, tincidunt erat. Nullam vehicula magna in leo commodo venenatis. Suspendisse potenti.</p>"
 	)
 ];
 
-const featured = 2;
-
 /* Post Viewing: The home page should allow the user to view all their posts. */
 app.get("/", (req, res) => {
 	res.render("index.ejs", {
-		featured,
-		blogPosts
+		blogPosts,
+		categories: blogCategories
+	});
+});
+
+app.get("/entries/new", (req, res) => {
+	res.render("submitEntry.ejs", {
+		categories: blogCategories
 	});
 });
 
 app.get("/entries/:id", (req, res) => {
 	const id = req.params.id;
-	if (id && id !== -1) {
+	if (id) {
 		res.render("submitEntry.ejs", {
 			categories: blogCategories,
 			blogPosts,
 			id: id
-		});
-	} else {
-		res.render("submitEntry.ejs", {
-			categories: blogCategories
 		});
 	}
 });
@@ -107,7 +103,6 @@ app.post("/entries", (req, res) => {
 		req.body.title,
 		req.body.category,
 		req.body.author,
-		req.body.shortDescription,
 		req.body.blogContent
 	));
 	res.redirect("/");
@@ -118,9 +113,8 @@ app.put("/entries/:id", (req, res) => {
 	const id = req.params.id;
 	if (id) {
 		blogPosts[id]["title"] = req.body.title;
-		blogPosts[id]["category"] = req.body.title;
-		blogPosts[id]["shortDescription"] = req.body.shortDescription;
-		blogPosts[id]["text"] = req.body.title;
+		blogPosts[id]["category"] = req.body.category;
+		blogPosts[id]["text"] = req.body.blogContent;
 	}
 	res.redirect("/");
 });

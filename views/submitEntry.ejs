@@ -5,7 +5,7 @@
 
 <main class="container">
 	<h3 class="pb-4 mb-4 fst-italic border-bottom">
-		What did you find out new today?
+		What's new today?
 	</h3>
 
 	<!-- fill value field with content from post to be edited -->
@@ -13,30 +13,21 @@
 		<div class="form-group mb-4">
 			<label for="title">Title</label>
 			<input type="text" class="form-control" id="title" name="title" 
-				<% if (locals.id) { %> value=" <%= blogPosts[id].title %> " <% } %>
-			>
-		</div>
-		<div class="form-group mb-4">
-			<label for="shortDescription">Short description</label>
-			<input type="text" class="form-control" id="shortDescription" name="shortDescription"
-				<% if (locals.id) { %> value=" <%= blogPosts[id].shortDescription %> " <% } %>
+				<% if (locals.id && locals.blogPosts) { %> value="<%= blogPosts[id].title %>" <% } %>
 			>
 		</div>
 		<div class="form-group mb-4">
 			<label for="author">Author</label>
 			<input type="text" class="form-control" id="author" name="author"
-				<% if (locals.id) { %> value=" <%= blogPosts[id].author %> " readonly <% } %>
+				<% if (locals.id && locals.blogPosts) { %> value="<%= blogPosts[id].author %>" readonly <% } %>
 			>
 		</div>
 		<div class="form-group mb-4">
 			<label for="category">Category</label>
-			<select class="form-control form-control-sm" name="category"
-				<% if (locals.id) { %> value=" <%= categories[blogPosts[id].category] %> " <% } %>
-			>
+			<select class="form-control form-control-sm" name="category">
 				<% if (locals.categories) { %>
 					<% for (let i = 0; i < categories.length; i++) { %>
-						<option value="<%= i %>"
-							<% if (locals.id && blogPosts[id].category === i) { %> selected="selected"> <% } %>
+						<option value="<%= i %>" <% if (locals.id && locals.blogPosts && blogPosts[id].category == i) { %>selected="selected"<% } %>>
 							<%= categories[i] %>
 						</option>
 					<% } %>
@@ -45,9 +36,7 @@
 		</div>
 		<div class="form-group mb-4">
 			<label for="blogContent">Content</label>
-			<textarea class="form-control" id="blogContent" name="blogContent" rows="3" <% if (!locals.id) { %> placeholder="What did you find out new today?" <% } %>>
-				<% if (locals.id) { %> <%= blogPosts[id].text %> <% } %>
-			</textarea>
+			<textarea class="form-control" id="blogContent" name="blogContent" rows="3" <% if (!locals.id) { %> placeholder="What did you find out new today?" <% } %>><% if (locals.id && locals.blogPosts) { %><%= blogPosts[id].text %><% } %></textarea>
 		</div>
 		<% if (locals.id) { %>
 			<input type="submit" value="Finish edit" class="btn btn-outline-primary rounded-pill mb-4">
